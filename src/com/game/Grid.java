@@ -6,16 +6,16 @@ import javax.swing.*;
 
 public class Grid extends JFrame {
 
-    private Cell[][] cells;
+    private Panel panel;
+    private int rows, cols;
 
-    public Grid(int height, int width) {
+    public Grid(int rows, int cols) {
         super("Is this real life?");
+        this.rows = rows;
+        this.cols = cols;
 
-        JPanel panel = new JPanel(new GridLayout(height, width));
-        cells = new Cell[height][width];
-        Builder builder = new Builder(panel, cells, height, width);
-
-        builder.tumbler();
+        panel = new Panel(rows, cols);
+        panel.tenCellRow();
 
         add(panel, BorderLayout.CENTER);
 
@@ -25,7 +25,15 @@ public class Grid extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public Cell[][] getCells() {
-        return this.cells;
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public Cell getCell(int i, int j) {
+        return panel.getCell(i, j);
     }
 }
