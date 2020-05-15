@@ -1,58 +1,48 @@
 package com.game;
 
-import javax.swing.*;
-
 public class Controller {
     private int height, width;
-    private JLabel[][] label;
+    private Cell[][] cells;
 
-    public Controller(int height, int width, JLabel[][] label) {
+    public Controller(int height, int width, Cell[][] cells) {
         this.height = height;
         this.width = width;
-        this.label = label;
+        this.cells = cells;
     }
 
     public void move() {
-        int[][] copy = new int[height][width];
-
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
+                Cell currCell = cells[i][j];
                 int aliveNeighbours = countAliveNeighbours(i, j);
-                boolean isAlive = isAlive(i, j);
 
-                if (isAlive) {
+                boolean aliveNext;
+                if (currCell.isAlive()) {
                     if (aliveNeighbours < 2) {
-                        copy[i][j] = 0;
-                    } else if (aliveNeighbours < 4) {
-                        copy[i][j] = 1;
-                    } else {
-                        copy[i][j] = 0;
-                    }
+                        aliveNext = false;
+                    } else aliveNext = aliveNeighbours < 4;
                 } else {
-                    if (aliveNeighbours == 3) {
-                        copy[i][j] = 1;
-                    }
+                    aliveNext = aliveNeighbours == 3;
                 }
+
+                currCell.setAliveNext(aliveNext);
             }
         }
 
-        fillCopy(copy);
+        moveToNextState();
     }
 
-    private void fillCopy(int[][] copy) {
+    private void moveToNextState() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                boolean shouldLive = copy[i][j] == 1;
+                Cell currCell = cells[i][j];
 
-                if (isAlive(i, j) != shouldLive) {
-                    label[i][j].setBackground(Builder.colors.get(copy[i][j]));
+                if (currCell.isAlive() != currCell.isAliveNext()) {
+                    currCell.setAlive(currCell.isAliveNext());
                 }
+                currCell.setAliveNext(false);
             }
         }
-    }
-
-    private boolean isAlive(int i, int j) {
-        return Builder.colors.indexOf(label[i][j].getBackground()) == 1;
     }
 
     private int countAliveNeighbours(int i, int j) {
@@ -66,7 +56,7 @@ public class Controller {
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 if (x != i || y != j) {
-                    if (isAlive(x, y)) {
+                    if (cells[x][y].isAlive()) {
                         count++;
                     }
                 }

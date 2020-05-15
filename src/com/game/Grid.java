@@ -6,14 +6,14 @@ import javax.swing.*;
 
 public class Grid extends JFrame {
 
-    private JLabel[][] label;
+    private Cell[][] cells;
 
     public Grid(int height, int width) {
         super("Is this real life?");
 
         JPanel panel = new JPanel(new GridLayout(height, width));
-        label = new JLabel[height][width];
-        Builder builder = new Builder(panel, label, height, width);
+        cells = new Cell[height][width];
+        Builder builder = new Builder(panel, cells, height, width);
 
         builder.tumbler();
 
@@ -25,7 +25,7 @@ public class Grid extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public JLabel[][] getLabel() {
-        return this.label;
+    public Cell[][] getCells() {
+        return this.cells;
     }
 }

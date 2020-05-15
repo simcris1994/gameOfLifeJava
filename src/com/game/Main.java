@@ -9,7 +9,7 @@ public class Main extends JFrame {
 
     public static void main(String[] arg) throws InterruptedException {
         Grid grid = new Grid(height, width);
-        Controller controller = new Controller(height, width, grid.getLabel());
+        Controller controller = new Controller(height, width, grid.getCells());
 
         while (true) {
             Thread.sleep(300);
