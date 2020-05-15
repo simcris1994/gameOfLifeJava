@@ -31,76 +31,36 @@ public class Panel extends JPanel {
         this.add(newCell);
     }
 
-    public void randomFill() {
+    public void changeState() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                addCell(i, j);
-            }
-        }
-    }
+                Cell currCell = getCell(i, j);
 
-    public void glider() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-
-                int refX = rows/2 - 1;
-                int refY = cols/2 - 1;
-                boolean alive = false;
-                if ((i == refX-1 && j == refY) ||
-                    (i == refX && j == refY+1) ||
-                    (i == refX+1 && j >= refY-1 && j <= refY+1)) {
-                    alive = true;
+                if (currCell.isAlive() != currCell.isAliveNext()) {
+                    currCell.setAlive(currCell.isAliveNext());
                 }
-
-                addCell(i, j, alive);
             }
         }
     }
 
-    public void tumbler() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int refX = rows/2 - 1;
-                int refY = cols/2 - 1;
-                boolean alive = false;
-                if ((i == refX-2 && (j == refY-3 || j == refY+3)) ||
-                    (i == refX-1 && (j == refY-4 || j == refY-2 || j == refY+2 || j == refY+4)) ||
-                    (i == refX && (j == refY-2 || j == refY-1 || j == refY+1 || j == refY+2)) ||
-                    (i == refX+1 && (j == refY-3 || j == refY-2 || j == refY+2 || j == refY+3)) ||
-                    (i == refX+2 && (j == refY-2 || j == refY-1 || j == refY+1 || j == refY+2))) {
-                    alive = true;
+    public int countAliveNeighbours(int i, int j) {
+        int count = 0;
+
+        int startX = (i > 0) ? i - 1 : i;
+        int endX = (i < rows-1) ? i + 1 : i;
+        int startY = (j > 0) ? j - 1 : j;
+        int endY = (j < cols-1) ? j + 1 : j;
+
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                if (x != i || y != j) {
+                    if (getCell(x, y).isAlive()) {
+                        count++;
+                    }
                 }
-
-                addCell(i, j, alive);
             }
         }
-    }
 
-    public void tenCellRow() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int refY = cols/2;
-                boolean alive = i == rows/2 && j > refY-5 && j < refY+6;
-                addCell(i, j, alive);
-            }
-        }
-    }
-
-    public void smallExploder() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int refX = rows/2 - 1;
-                int refY = cols/2 - 1;
-                boolean alive = false;
-                if ((i == refX-1 && j == refY) ||
-                    (i == refX && j >= refY-1 && j <= refY+1) ||
-                    (i == refX+1 && (j == refY-1 || j == refY+1)) ||
-                    (i == refX+2 && j == refY)) {
-                    alive = true;
-                }
-
-                addCell(i, j, alive);
-            }
-        }
+        return count;
     }
 }

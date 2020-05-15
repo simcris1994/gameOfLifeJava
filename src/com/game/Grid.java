@@ -15,7 +15,7 @@ public class Grid extends JFrame {
         this.cols = cols;
 
         panel = new Panel(rows, cols);
-        panel.tenCellRow();
+        Builders.tenCellRow(this);
 
         add(panel, BorderLayout.CENTER);
 
@@ -25,15 +25,41 @@ public class Grid extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public void addCell(int i, int j) {
+        panel.addCell(i, j);
+    }
+
+    public void addCell(int i, int j, boolean alive) {
+        panel.addCell(i, j, alive);
+    }
+
+    public void move() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Cell currCell = panel.getCell(i, j);
+                int aliveNeighbours = panel.countAliveNeighbours(i, j);
+
+                boolean aliveNext;
+                if (currCell.isAlive()) {
+                    if (aliveNeighbours < 2) {
+                        aliveNext = false;
+                    } else aliveNext = aliveNeighbours < 4;
+                } else {
+                    aliveNext = aliveNeighbours == 3;
+                }
+
+                currCell.setAliveNext(aliveNext);
+            }
+        }
+
+        panel.changeState();
+    }
+
     public int getRows() {
         return rows;
     }
 
     public int getCols() {
         return cols;
-    }
-
-    public Cell getCell(int i, int j) {
-        return panel.getCell(i, j);
     }
 }
