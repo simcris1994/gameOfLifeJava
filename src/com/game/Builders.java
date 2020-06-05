@@ -1,6 +1,19 @@
 package com.game;
 
+import java.io.IOException;
+
 public class Builders {
+
+    public static void fromFile(Grid grid) throws IOException {
+        boolean[][] cells = LifReader.read(grid.getRows(), grid.getCols());
+
+        for (int i = 0; i < grid.getRows(); i++) {
+            for (int j = 0; j < grid.getCols(); j++) {
+                grid.addCell(i, j, cells[i][j]);
+            }
+        }
+    }
+
     public static void randomFill(Grid grid) {
         for (int i = 0; i < grid.getRows(); i++) {
             for (int j = 0; j < grid.getCols(); j++) {
@@ -73,4 +86,5 @@ public class Builders {
             }
         }
     }
+
 }
