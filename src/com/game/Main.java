@@ -1,18 +1,25 @@
 package com.game;
 
-import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
-public class Main extends JFrame {
+public class Main extends Frame {
 
-    static int height = 150;
-    static int width = 250;
+    static Grid grid;
 
-    public static void main(String[] arg) throws InterruptedException, IOException {
-        Grid grid = new Grid(height, width);
+    Main(String title, int w, int h, int rows, int columns) throws IOException {
+        setTitle(title);
+        grid = new Grid(w, h, rows, columns);
+        add(grid);
+        setSize(w, h);
+        setResizable(false);
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        new Main("The Game Of Life", 1750, 900, 150, 250).setVisible(true);
 
         while (true) {
-            Thread.sleep(300);
+            Thread.sleep(150);
             grid.move();
         }
     }

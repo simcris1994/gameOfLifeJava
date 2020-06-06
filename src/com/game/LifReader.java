@@ -35,19 +35,14 @@ public class LifReader {
                 String cells = tokens[0];
                 int copyX = x;
                 for (int i = 0; i < cells.length(); i++) {
-                    if (i != 0) {
-                        copyX++;
-                    }
+                    if (i != 0) copyX++;
 
-                    char curr = cells.charAt(i);
-                    if (curr == '*') {
+                    if (cells.charAt(i) == '*') {
                         // alive
                         arr[y][copyX] = true;
                     }
 
-                    if (i == cells.length() - 1) {
-                        y++;
-                    }
+                    if (i == cells.length() - 1) y++;
                 }
             }
 
