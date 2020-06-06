@@ -3,9 +3,7 @@ package com.game;
 import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.swing.*;
-
-public class Cell extends JLabel {
+public class Cell {
     private static Color DEAD = Color.BLACK;
     private static Color ALIVE = Color.GREEN;
 
@@ -14,15 +12,11 @@ public class Cell extends JLabel {
     public Cell(boolean alive) {
         this.alive = alive;
         this.aliveNext = false;
-        this.setOpaque(true);
-        setColor(alive);
     }
 
     public Cell() {
         this.alive = randomState();
         this.aliveNext = false;
-        this.setOpaque(true);
-        setColor(alive);
     }
 
     private boolean randomState() {
@@ -31,8 +25,8 @@ public class Cell extends JLabel {
         return randomNum == 1;
     }
 
-    private void setColor(boolean alive) {
-        this.setBackground(alive ? ALIVE : DEAD);
+    public Color getColor() {
+        return alive ? ALIVE : DEAD;
     }
 
     public boolean isAlive() {
@@ -41,7 +35,6 @@ public class Cell extends JLabel {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
-        setColor(alive);
     }
 
     public boolean isAliveNext() {

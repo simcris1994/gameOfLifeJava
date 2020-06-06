@@ -3,42 +3,85 @@ package com.game;
 import java.awt.*;
 import java.io.IOException;
 
-import javax.swing.*;
+public class Grid extends Canvas {
 
-public class Grid extends JFrame {
+    int width, height, rows, cols;
+    Cell[][] cells;
 
-    private Panel panel;
-    private int rows, cols;
-
-    public Grid(int rows, int cols) throws IOException {
-        super("Is this real life?");
-        this.rows = rows;
-        this.cols = cols;
-
-        panel = new Panel(rows, cols);
+    Grid(int w, int h, int r, int c) throws IOException {
+        setSize(width = w, height = h);
+        rows = r;
+        cols = c;
+        cells = new Cell[rows][cols];
         Builders.fromFile(this);
+    }
 
-        add(panel, BorderLayout.CENTER);
+    @Override
+    public void paint(Graphics g) {
+        int htOfRow = height / rows;
+        int wdOfRow = width / cols;
 
-        this.setMinimumSize(new Dimension(2500, 1000));
-        this.setResizable(true);
-        this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                g.setColor(getCell(i, j).getColor());
+                g.fillRect(j * wdOfRow, i * htOfRow, wdOfRow, htOfRow);
+            }
+        }
+    }
+
+    public Cell getCell(int i, int j) {
+        return cells[i][j];
     }
 
     public void addCell(int i, int j) {
-        panel.addCell(i, j);
+        Cell cell = new Cell();
+        cells[i][j] = cell;
     }
 
     public void addCell(int i, int j, boolean alive) {
-        panel.addCell(i, j, alive);
+        Cell cell = new Cell(alive);
+        cells[i][j] = cell;
+    }
+
+    public void changeState() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Cell currCell = getCell(i, j);
+
+                if (currCell.isAlive() != currCell.isAliveNext()) {
+                    currCell.setAlive(currCell.isAliveNext());
+                }
+            }
+        }
+        this.paint(this.getGraphics());
+    }
+
+    public int countAliveNeighbours(int i, int j) {
+        int count = 0;
+
+        int startX = (i > 0) ? i - 1 : i;
+        int endX = (i < rows-1) ? i + 1 : i;
+        int startY = (j > 0) ? j - 1 : j;
+        int endY = (j < cols-1) ? j + 1 : j;
+
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                if (x != i || y != j) {
+                    if (getCell(x, y).isAlive()) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
     }
 
     public void move() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                Cell currCell = panel.getCell(i, j);
-                int aliveNeighbours = panel.countAliveNeighbours(i, j);
+                Cell currCell = getCell(i, j);
+                int aliveNeighbours = countAliveNeighbours(i, j);
 
                 boolean aliveNext;
                 if (currCell.isAlive()) {
@@ -53,7 +96,7 @@ public class Grid extends JFrame {
             }
         }
 
-        panel.changeState();
+        changeState();
     }
 
     public int getRows() {
